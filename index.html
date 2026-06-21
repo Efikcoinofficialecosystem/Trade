@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Trade Investment Engine - Smart Chain Simulation</title>
+    <style>
+        :root {
+            --bg-main: #060913;
+            --bg-card: #0f1626;
+            --border-color: #1e293b;
+            --accent-color: #f59e0b;
+            --text-muted: #64748b;
+            --text-success: #10b981;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-main);
+            color: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        h1 { color: #ffffff; margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+        h1 span { color: var(--accent-color); }
+        
+        .view-switch {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            background-color: var(--bg-card);
+            color: #fff;
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: #000;
+            border-color: var(--accent-color);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .metric-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: bold; }
+        .metric-value { font-size: 24px; font-weight: 700; margin-top: 8px; color: #ffffff; }
+
+        .app-section { display: none; }
+        .app-section.active { display: block; }
+
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr;
+            gap: 25px;
+        }
+        @media (max-width: 900px) {
+            .panel-grid { grid-template-columns: 1fr; }
+        }
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .card h2 { color: var(--accent-color); font-size: 16px; text-transform: uppercase; margin-top: 0; margin-bottom: 20px; }
+        
+        label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; }
+        input, select {
+            width: 100%; padding: 12px; margin-bottom: 18px; border-radius: 6px;
+            border: 1px solid #1e293b; background-color: #060913; color: #fff; box-sizing: border-box;
+        }
+        button {
+            width: 100%; padding: 14px; background-color: var(--accent-color); color: #000;
+            border: none; border-radius: 6px; font-weight: bold; text-transform: uppercase; cursor: pointer;
+        }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { text-align: left; padding: 14px 12px; border-bottom: 1px solid var(--border-color); }
+        th { color: var(--text-muted); text-transform: uppercase; font-size: 11px; }
+        
+        .status-pill { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .active-pill { background-color: rgba(16, 185, 129, 0.15); color: var(--text-success); }
+        .alert-pill { background-color: rgba(245, 158, 11, 0.15); color: var(--accent-color); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>Global Trade <span>Investment Engine</span></h1>
+            <p style="color: var(--text-muted); margin: 5px 0 0 0; font-size: 13px;">Smart Chain Multi-Tier Staking & Yield Simulation</p>
+        </div>
+        <div class="view-switch">
+            <button class="tab-btn active" onclick="switchView('client')">Client Dashboard</button>
+            <button class="tab-btn" onclick="switchView('admin')">Admin Override Terminal</button>
+        </div>
+    </header>
+
+    <div id="client-view" class="app-section active">
+        <div class="dashboard-grid">
+            <div class="metric-card"><div class="metric-title">Portfolio Principal Account</div><div class="metric-value" id="user-display-bal">$5,250.00</div></div>
+            <div class="metric-card"><div class="metric-title">Accumulated Net Dividends</div><div class="metric-value" id="user-display-yield" style="color: var(--text-success);">$340.25</div></div>
+            <div class="metric-card"><div class="metric-title">Active Locked Smart Pools</div><div class="metric-value" id="user-display-pools">1 Plan</div></div>
+        </div>
+
+        <div class="panel-grid">
+            <div class="card">
+                <h2>Commit Liquidity Pool</h2>
+                <label for="stakeAsset">Select Base Asset</label>
+                <select id="stakeAsset">
+                    <option value="EFC">Efikcoin (EFC)</option>
+                    <option value="USDT">Tether (USDT)</option>
+                    <option value="BTC">Bitcoin (BTC)</option>
+                </select>
+                <label for="stakePlan">Investment Tier Plan</label>
+                <select id="stakePlan">
+                    <option value="0.08">Alpha Tier Alpha (8% Yield / 30 Days)</option>
+                    <option value="0.15">Elite Yield Growth (15% Yield / 90 Days)</option>
+                </select>
+                <label for="stakeAmount">Deposit Principal (USD Equivalent)</label>
+                <input type="number" id="stakeAmount" value="500">
+                <button onclick="clientSubmitInvestment()">Deploy Staking Plan</button>
+            </div>
+
+            <div class="card">
+                <h2>Your Contract Positions</h2>
+                <table>
+                    <thead>
+                        <tr><th>Asset</th><th>Principal Amount</th><th>Maturity Yield</th><th>Contract Status</th></tr>
+                    </thead>
+                    <tbody id="userPlanTable">
+                        <tr><td><b>EFC</b></td><td>$5,250.00</td><td>+8% APY</td><td><span class="status-pill active-pill">Staking Locked</span></td></tr>
+                    </tbody>
+                </table>
+                
+                <h2 style="margin-top: 35px;">Capital Liquidation & Withdrawals</h2>
+                <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 15px;">
+                    ⚠️ Automated on-chain structural liquidity rules require smart contract verification flags. To withdraw active capital stakes, users must query the Administrative Hub directly for secure verification clearance keys.
+                </p>
+                <button style="background-color: #1e293b; color: #fff; border: 1px solid #334155;" onclick="alert('Please copy your account reference hash and contact support or the administrative officer to release your liquidity keys.')">
+                    Request Withdrawal Settlement Key
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-view" class="app-section">
+        <div class="panel-grid">
+            <div class="card">
+                <h2>Client Balance Matrix Adjuster</h2>
+                <label for="adminSelectUser">Active Target Account Index</label>
+                <select id="adminSelectUser">
+                    <option value="user1">Primary Client Node (+234913636...)</option>
+                </select>
+                
+                <label for="adminFieldBal">Edit Principal Value (USD)</label>
+                <input type="number" id="adminFieldBal" value="5250.00">
+                
+                <label for="adminFieldYield">Edit Generated Yield Accumulated (USD)</label>
+                <input type="number" id="adminFieldYield" value="340.25">
+                
+                <button onclick="adminApplyBalances()">Apply Live Modifications</button>
+            </div>
+
+            <div class="card">
+                <h2>Manual Withdrawal Monitoring Ledger</h2>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px;">
+                    Authorized administrative gatekeeper node. Secure clearance overrides are performed manually.
+                </p>
+                <table>
+                    <thead>
+                        <tr><th>Client Node Address</th><th>Requested Volume</th><th>Asset Class</th><th>Gateway Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Node-0x71C7...8976F</td>
+                            <td><b>$1,450.00</b></td>
+                            <td>USDT (TRC20)</td>
+                            <td><button style="padding: 6px 12px; font-size: 11px; width: auto;" onclick="alert('Withdrawal request verified and finalized successfully.')">Approve Manual Release</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // In-memory demo data structures for immediate presentations
+    let currentAccountState = {
+        principal: 5250.00,
+        yieldAccumulated: 340.25,
+        poolCount: 1
+    };
+
+    function switchView(target) {
+        document.querySelectorAll('.app-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        
+        document.getElementById(`${target}-view`).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function clientSubmitInvestment() {
+        const asset = document.getElementById('stakeAsset').value;
+        const amt = parseFloat(document.getElementById('stakeAmount').value || "0");
+        
+        if(amt <= 0) return alert("Enter a valid investment amount.");
+        
+        currentAccountState.principal += amt;
+        currentAccountState.poolCount += 1;
+        
+        // Refresh User Interface metrics
+        updateUserInterfaceView();
+        
+        // Append row to active investments ledger components
+        const table = document.getElementById('userPlanTable');
+        const row = document.createElement('tr');
+        row.innerHTML = `<td><b>${asset}</b></td><td>$${amt.toLocaleString(undefined,{minimumFractionDigits:2})}</td><td>+12% Yield</td><td><span class="status-pill alert-pill">Awaiting Epoch</span></td>`;
+        table.appendChild(row);
+        
+        alert("Smart contract position broadcasted successfully. Awaiting validation block.");
+    }
+
+    function adminApplyBalances() {
+        const newBal = parseFloat(document.getElementById('adminFieldBal').value || "0");
+        const newYield = parseFloat(document.getElementById('adminFieldYield').value || "0");
+        
+        currentAccountState.principal = newBal;
+        currentAccountState.yieldAccumulated = newYield;
+        
+        updateUserInterfaceView();
+        alert("Client ledger values updated instantly across the distributed node index.");
+    }
+
+    function updateUserInterfaceView() {
+        document.getElementById('user-display-bal').innerText = `$${currentAccountState.principal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('user-display-yield').innerText = `$${currentAccountState.yieldAccumulated.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('user-display-pools').innerText = `${currentAccountState.poolCount} Plan(s)`;
+        
+        // Match the fields in admin settings to sync smoothly
+        document.getElementById('adminFieldBal').value = currentAccountState.principal.toFixed(2);
+        document.getElementById('adminFieldYield').value = currentAccountState.yieldAccumulated.toFixed(2);
+    }
+</script>
+
+</body>
+</html>
